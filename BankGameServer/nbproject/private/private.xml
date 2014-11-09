@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/Jogada.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/controller/Controller.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/Conexao.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/Venda.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/view/Main.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/Sala.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/BankGameServer.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/Jogo.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/JSONParse.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/Atendente.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/exceptions/DadosInvalidosException.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/SalaDeJogo.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/ThreadReceptoraBC.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/Jogador.java</file>
+            <file>file:/C:/Users/JhoneDarts/Documents/NetBeansProjects/BankGameServer/src/br/com/bankgame/model/Casa.java</file>
+        </group>
     </open-files>
 </project-private>

@@ -24,6 +24,7 @@ public class Vendas extends javax.swing.JDialog {
     public Vendas(List<Venda> vendas, java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.vendas = vendas;
         
         DefaultTableModel tableModel = new DefaultTableModel();
         tableModel = (DefaultTableModel) vendasTable.getModel();

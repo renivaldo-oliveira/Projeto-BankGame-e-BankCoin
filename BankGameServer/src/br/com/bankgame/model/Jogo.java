@@ -51,9 +51,9 @@ public class Jogo {
                 sala.getJogadores().remove(jogadorExcluido);
                 //limpar o cara da partida, ou melhor, limpar a partida do cara
                 for (Casa casa : sala.getCasas()){
-                    if(casa.getDono()!=null){
+                    if(!casa.getDono().equals("")){
                         if (casa.getDono().equals(jogadorExcluido.getLogin())){
-                            casa.setDono(null);
+                            casa.setDono("");
                             casa.setQtdPredios(0);
                         }
                     }
@@ -103,11 +103,11 @@ public class Jogo {
         SalaDeJogo salaAtual = null;
         for (SalaDeJogo sala : salasDeJogo){
             if (sala.getIdSala().equals(atendente.getIdSalaLogada()))
-                    salaAtual = sala;
+                salaAtual = sala;
         }
         //Compra
         if (jogada.getCompraIdCasa() != 0){// vai comprar alguma casa (true)
-            if (salaAtual.getCasas().get(jogada.getCompraIdCasa()).getDono() == null){
+            if (salaAtual.getCasas().get(jogada.getCompraIdCasa()).getDono().equals("")){
                 salaAtual.getCasas().get(jogada.getCompraIdCasa()).setDono(atendente.getIdContaLogada());
             }else{//a casa é dele, entao adicionamos um predio
                 int qtdPredios = salaAtual.getCasas().get(jogada.getCompraIdCasa()).getQtdPredios();
@@ -119,7 +119,7 @@ public class Jogo {
         //Venda(s)
         if (!jogada.getVendas().isEmpty()){
             for (Venda venda : jogada.getVendas()){
-                salaAtual.getCasas().get(venda.getIdCasa()).setDono(null);
+                salaAtual.getCasas().get(venda.getIdCasa()).setDono("");
                 salaAtual.getCasas().get(venda.getIdCasa()).setQtdPredios(0);
                 int saldo = salaAtual.getJogador(atendente.getIdContaLogada()).getSaldo();
                 salaAtual.getJogador(atendente.getIdContaLogada()).setSaldo(saldo + venda.getValor());
@@ -131,10 +131,11 @@ public class Jogo {
             Jogador jogadorPagamente = salaAtual.getJogador(atendente.getIdContaLogada());
             jogadorPagamente.setSaldo(jogadorPagamente.getSaldo() - jogada.getPagamentoValor());
         }            
-        if (!jogada.getPagamentoIdConta().equals("")){
+        if (jogada.getPagamentoValor()>0){
             Jogador jogadorPago = salaAtual.getJogador(jogada.getPagamentoIdConta());
-            if(jogadorPago!=null)
-                jogadorPago.setSaldo(jogadorPago.getSaldo() + jogada.getPagamentoValor());
+            if(jogadorPago != null)
+                if(!jogadorPago.equals(""))
+                    jogadorPago.setSaldo(jogadorPago.getSaldo() + jogada.getPagamentoValor());
             Jogador jogadorPagamente = salaAtual.getJogador(atendente.getIdContaLogada());
             jogadorPagamente.setSaldo(jogadorPagamente.getSaldo() - jogada.getPagamentoValor());
         }

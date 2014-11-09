@@ -21,7 +21,7 @@ public class ControllerCliente{
 	private Socket socket;
         private String saldoConta;
         private String saldoGlobal;
-	
+	//ass
 	public ControllerCliente() throws IOException, ConexaoFalhouException, NumberFormatException{
 	    try{
                 socket = new Socket("localhost",1307);  

@@ -47,6 +47,15 @@ public class DigiteSenhaDialog extends javax.swing.JDialog {
         senhaLabel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         senhaLabel.setText("Senha:");
 
+        senhaPasswordField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                senhaPasswordFieldKeyReleased(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                senhaPasswordFieldKeyPressed(evt);
+            }
+        });
+
         tituloLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tituloLabel.setText("Digite a senha");
         tituloLabel.setToolTipText("");
@@ -133,6 +142,22 @@ public class DigiteSenhaDialog extends javax.swing.JDialog {
         resposta = true;
         dispose();            
     }//GEN-LAST:event_okButtonActionPerformed
+
+    private void senhaPasswordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_senhaPasswordFieldKeyPressed
+        int key = evt.getKeyCode();
+        if (key == java.awt.event.KeyEvent.VK_ENTER){
+            if (senhaPasswordField.getText().isEmpty()){
+                //ignorar
+            }else 
+                okButtonActionPerformed(null);            
+        }
+    }//GEN-LAST:event_senhaPasswordFieldKeyPressed
+
+    private void senhaPasswordFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_senhaPasswordFieldKeyReleased
+        int key = evt.getKeyCode();
+        if (key == java.awt.event.KeyEvent.VK_ENTER)
+        { }
+    }//GEN-LAST:event_senhaPasswordFieldKeyReleased
 
     /**
      * @param args the command line arguments

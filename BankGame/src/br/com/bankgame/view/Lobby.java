@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -200,7 +201,7 @@ public class Lobby extends javax.swing.JFrame {
     }
     
     public static void comecarJogo(){
-        try {
+        /*try {
             ///tomar o dinaro da moçada!! 
             controller.transferirBCoin("BankGame", 500);
             saldo = ""+(Integer.parseInt(saldo) - 500);
@@ -208,7 +209,7 @@ public class Lobby extends javax.swing.JFrame {
         } catch (ConexaoFalhouException | DadosInvalidosException ex) {
             JOptionPane.showMessageDialog(salaPanel, "Houston, temos um problema!");
             return;
-        }
+        }*/
         jogoComecara.setVisible(true);
         comecaraSegundos.setVisible(true);
         try { 
@@ -225,9 +226,9 @@ public class Lobby extends javax.swing.JFrame {
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>>
         //                                                                   <<<
         TelaJogo.getInstance().setVisible(true);
-        TelaJogo.setMeuNome(idContaLogada);
-        TelaJogo.getInstance().setPrimeiro(jogadoresSala.get(0).getLogin());
+        TelaJogo.setMeuNome(idContaLogada);        
         Inicial.setLobbyVisible(false);
+        
         //                               AQUI!!!!                            >>>     
         //                                                                   <<<
         //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>>>
@@ -725,6 +726,16 @@ public class Lobby extends javax.swing.JFrame {
                 System.out.println("Cronometragem interrompida"); 
             } 
         } 
+    
+    public static JPanel getSalaPanel(){
+        return salaPanel;
+    }
+    public static JPanel getLobbyPanel(){
+        return lobbyPanel;
+    }
+    public static List<Jogador> getJogadoresList(){
+        return jogadoresSala;
+    }
     /**
      * @param args the command line arguments
      */

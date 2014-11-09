@@ -89,8 +89,8 @@ public class TelaJogo extends javax.swing.JFrame{
         
         playerBlue = new JogadorView(714, 515, 1, "");//colcar null
         playerRed = new JogadorView(654, 515, 2, "");
-        playerGreen = new JogadorView(654, 545, 3, null);
-        playerPurple = new JogadorView(714, 545, 4, null);
+        playerGreen = new JogadorView(654, 545, 3, "");
+        playerPurple = new JogadorView(714, 545, 4, "");
         
         turno = "Aguarde sua vez...";
         contador = "";
@@ -152,11 +152,13 @@ public class TelaJogo extends javax.swing.JFrame{
         for (Casa casa : casas){
             casa.desenharPosse(g2, this);
         }
-        g2.drawImage(icoBlue.getImage(), playerBlue.getX(), playerBlue.getY(), this);  
-        g2.drawImage(icoRed.getImage(), playerRed.getX(), playerRed.getY(), this);
-        if(playerGreen.getNome()!=null)
+        if(!playerBlue.getNome().equals(""))
+        g2.drawImage(icoBlue.getImage(), playerBlue.getX(), playerBlue.getY(), this);
+        if(!playerRed.getNome().equals(""))
+            g2.drawImage(icoRed.getImage(), playerRed.getX(), playerRed.getY(), this);
+        if(!playerGreen.getNome().equals(""))
             g2.drawImage(icoGreen.getImage(), playerGreen.getX(), playerGreen.getY(), this);
-        if(playerPurple.getNome()!=null)
+        if(!playerPurple.getNome().equals(""))
             g2.drawImage(icoPurple.getImage(), playerPurple.getX(), playerPurple.getY(), this);   
         desenharStatus(g2);
         desenharFimDeJogo(g2);
@@ -170,18 +172,19 @@ public class TelaJogo extends javax.swing.JFrame{
         
         g.drawString(turno, (LARGURA - metrica.stringWidth(turno))/2, ALTURA/2 -140);
         g.drawString(contador, (LARGURA - metrica.stringWidth(contador))/2, ALTURA/2 +18 -140);
-        
-        g.drawString(playerBlue.getNome(), (LARGURA - metrica.stringWidth(playerBlue.getNome()))/2 -200, ALTURA/2 +160);
-        g.drawString(playerBlue.getSaldo()+"", (LARGURA - metrica.stringWidth(playerBlue.getNome()))/2 -200, ALTURA/2 +18 +160);
-        
-        g.drawString(playerRed.getNome(), (LARGURA - metrica.stringWidth(playerRed.getNome()))/2 - 80, ALTURA/2 +160);
-        g.drawString(playerRed.getSaldo()+"", (LARGURA - metrica.stringWidth(playerRed.getNome()))/2 -80, ALTURA/2 +18 +160);
-        
-        if(playerGreen.getNome() != null){
+        if(!playerBlue.getNome().equals("")){
+            g.drawString(playerBlue.getNome(), (LARGURA - metrica.stringWidth(playerBlue.getNome()))/2 -200, ALTURA/2 +160);
+            g.drawString(playerBlue.getSaldo()+"", (LARGURA - metrica.stringWidth(playerBlue.getNome()))/2 -200, ALTURA/2 +18 +160);
+        }        
+        if(!playerRed.getNome().equals("")){
+            g.drawString(playerRed.getNome(), (LARGURA - metrica.stringWidth(playerRed.getNome()))/2 - 80, ALTURA/2 +160);
+            g.drawString(playerRed.getSaldo()+"", (LARGURA - metrica.stringWidth(playerRed.getNome()))/2 -80, ALTURA/2 +18 +160);
+        }        
+        if(!playerGreen.getNome().equals("")){
             g.drawString(playerGreen.getNome(), (LARGURA - metrica.stringWidth(playerGreen.getNome()))/2 +60, ALTURA/2 +160);
             g.drawString(playerGreen.getSaldo()+"", (LARGURA - metrica.stringWidth(playerGreen.getNome()))/2 +60, ALTURA/2 +18 +160);
         }
-        if(playerPurple.getNome() != null){
+        if(!playerPurple.getNome().equals("")){
             g.drawString(playerPurple.getNome(), (LARGURA - metrica.stringWidth(playerPurple.getNome()))/2 +180, ALTURA/2 +160);
             g.drawString(playerPurple.getSaldo()+"", (LARGURA - metrica.stringWidth(playerPurple.getNome()))/2 +180, ALTURA/2 +18 +160);
         }  
@@ -217,9 +220,12 @@ public class TelaJogo extends javax.swing.JFrame{
             if (posicaoJogador.getCasa()>=15 && posicaoJogador.getCasa() <20){
                 posicaoJogador.setY(posicaoJogador.getY() + 98);
             }
-            posicaoJogador.setCasa(posicaoJogador.getCasa()+i);
-            if(posicaoJogador.getCasa() == 20)
+            posicaoJogador.setCasa(posicaoJogador.getCasa()+1);
+            if(posicaoJogador.getCasa() == 20){
                 posicaoJogador.setCasa(0);
+                posicaoJogador.setBonusRodada(true);
+                System.out.println("bonus");
+            }
             repaint();          
             try {
                 Thread.sleep(300);
@@ -227,10 +233,6 @@ public class TelaJogo extends javax.swing.JFrame{
                 System.out.println("nao esperou, in moverJogador");
             }
         }
-    }
-    public void setPrimeiro(String primeiro){
-        if(primeiro.equals(meuNome));
-            minhaVez();
     }
     public void primeiro(String json){                 
         String primeiro = null;
@@ -240,15 +242,30 @@ public class TelaJogo extends javax.swing.JFrame{
             playerRed.setNome(jo.getString("red"));
             playerGreen.setNome(jo.getString("green"));
             playerPurple.setNome(jo.getString("purple"));
-            //primeiro = jo.getString("primeiro");
+            primeiro = jo.getString("primeiro");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //if(primeiro.equals(meuNome));
-          //  minhaVez();
+        System.out.println("\""+primeiro+"\".equals("+meuNome+")");
+        if(primeiro.equals(meuNome))
+            minhaVez();
     }
     
     public void atualizarJogo(String json){
+        if (json.contains("!--1")){
+            String nomeJogador = json.substring(3);
+            contador = "O Jogador "+nomeJogador+" faliu!";
+            if(playerBlue.getNome().equals(nomeJogador))
+                playerBlue.setNome("");
+            if(playerRed.getNome().equals(nomeJogador))
+                playerRed.setNome("");
+            if(playerGreen.getNome().equals(nomeJogador))
+                playerGreen.setNome("");
+            if(playerPurple.getNome().equals(nomeJogador))
+                playerPurple.setNome("");
+            repaint();
+            return;
+        }
         String proximo = null;
         try {
             JSONObject jo = new JSONObject(json);            
@@ -257,6 +274,7 @@ public class TelaJogo extends javax.swing.JFrame{
             if(ja.length()==1){
                 fimDeJogo = true;
                 ganhei = true;
+                return;
             }
             for(int j=0, tamanho = ja.length(); j<tamanho; j++){
                 String nome = ja.getJSONObject(j).getString("nome");
@@ -278,10 +296,12 @@ public class TelaJogo extends javax.swing.JFrame{
                     don = 1;
                 if(dono.equals(playerRed.getNome()))
                     don = 2;
-                if(dono.equals(playerGreen.getNome()))
-                    don = 3;
-                if(dono.equals(playerPurple.getNome()))
-                    don = 4;
+                if(!playerGreen.getNome().equals(""))
+                    if(dono.equals(playerGreen.getNome()))
+                        don = 3;
+                if(!playerPurple.getNome().equals(""))                    
+                    if(dono.equals(playerPurple.getNome()))
+                        don = 4;
                 casas.get(j).setDono(don);
                 casas.get(j).setQtdPredios(ja1.getJSONObject(j).getInt("qtdPredios"));
             }            
@@ -296,6 +316,7 @@ public class TelaJogo extends javax.swing.JFrame{
             minhaVez();
         }else{            
             turno = "Aguarde sua vez!";
+            dado = 0;
             if(proximo.contains("!--1"))
                 contador = proximo+" esta desconectado.";
             else if(proximo.contains("!-1"))
@@ -308,7 +329,10 @@ public class TelaJogo extends javax.swing.JFrame{
     }
     
     public void minhaVez(){
+        if(fimDeJogo)
+            turno = "Fim de jogo!";
         turno = "Sua vez de jogar!";
+        contador = "";        
         dado = rolarDado();
         repaint();
         try {
@@ -319,12 +343,18 @@ public class TelaJogo extends javax.swing.JFrame{
         int casaFinal = 0;
         int meuId = 0;
         int meuSaldo = 0;
+        boolean bonusRodada = false;
         if (meuNome.equals(playerBlue.getNome())){
             moverJogador(1, dado);
             controller.moverJogador(1, dado);
             casaFinal = playerBlue.getCasa();
             meuId = 1;
             meuSaldo = playerBlue.getSaldo();
+            bonusRodada = playerBlue.isBonusRodada();
+            if(playerBlue.isBonusRodada()){
+                contador = "Ganhou 150 pela rodada!";
+                playerBlue.setSaldo(playerBlue.getSaldo()+150);
+            }
         }
         if (meuNome.equals(playerRed.getNome())){
             moverJogador(2, dado);
@@ -332,6 +362,11 @@ public class TelaJogo extends javax.swing.JFrame{
             casaFinal = playerRed.getCasa();
             meuId = 2;
             meuSaldo = playerRed.getSaldo();
+            bonusRodada = playerRed.isBonusRodada();
+            if(playerRed.isBonusRodada()){
+                contador = "Ganhou 150 pela rodada!";
+                playerRed.setSaldo(playerRed.getSaldo()+150);
+            }
         }
         if (meuNome.equals(playerGreen.getNome())){
             moverJogador(3, dado);
@@ -339,6 +374,11 @@ public class TelaJogo extends javax.swing.JFrame{
             casaFinal = playerGreen.getCasa();
             meuId = 3;
             meuSaldo = playerGreen.getSaldo();
+            bonusRodada = playerGreen.isBonusRodada();
+            if(playerGreen.isBonusRodada()){
+                contador = "Ganhou 150 pela rodada!";
+                playerGreen.setSaldo(playerGreen.getSaldo()+150);
+            }
         }
         if (meuNome.equals(playerPurple.getNome())){
             moverJogador(4, dado);
@@ -346,6 +386,11 @@ public class TelaJogo extends javax.swing.JFrame{
             casaFinal = playerPurple.getCasa();
             meuId = 4;
             meuSaldo = playerPurple.getSaldo();
+            bonusRodada = playerPurple.isBonusRodada();
+            if(playerPurple.isBonusRodada()){
+                contador = "Ganhou 150 pela rodada!";
+                playerPurple.setSaldo(playerPurple.getSaldo()+150);
+            }
         }
         repaint();
         List<Venda> casasParaVenda = new ArrayList<Venda>();
@@ -367,7 +412,7 @@ public class TelaJogo extends javax.swing.JFrame{
                 dono = playerPurple.getNome();
         }            
         
-        OpcoesJogada opcoesJogada = new OpcoesJogada(casa, casasParaVenda, meuId, meuSaldo, casaFinal, dono, dado, this, true);
+        OpcoesJogada opcoesJogada = new OpcoesJogada(casa, casasParaVenda, meuId, meuSaldo, bonusRodada, casaFinal, dono, dado, this, true);
         opcoesJogada.setLocationRelativeTo(this);
         opcoesJogada.show();
         try {
@@ -381,6 +426,17 @@ public class TelaJogo extends javax.swing.JFrame{
         }else
             controller.enviarJogada(opcoesJogada.getJsonJogada());
         //enviar pro server
+        if(bonusRodada){
+            if(meuId == 1)
+                playerBlue.setBonusRodada(false);
+            if(meuId == 2)
+                playerRed.setBonusRodada(false);
+            if(meuId == 3)
+                playerGreen.setBonusRodada(false);
+            if(meuId == 4)
+                playerPurple.setBonusRodada(false);
+        }
+        dado = 0;
     }
     
     public void jogadorPosicao(String json){
@@ -506,11 +562,16 @@ public class TelaJogo extends javax.swing.JFrame{
         java.util.Timer timer = new java.util.Timer();
         timer.schedule(new TimerTask() {
             public void run() {
-                 JOptionPane.showMessageDialog(null, "Fim de jogo!");
-                 dispose();
-                 Inicial.setLobbyVisible(true);
-                 controller.solicitarFirstLobby();
+                JOptionPane.showMessageDialog(null, "Fim de jogo!");
+                dispose();
+                Inicial.setLobbyVisible(true);
+                controller.sairDaSala();
+                Lobby.getSalaPanel().setVisible(false);
+                Lobby.getLobbyPanel().setVisible(true);   
+                Lobby.getJogadoresList().clear();
+                controller.solicitarFirstLobby();
+                instance = null;
             }
-        }, 3000);
+        }, 6000);
     }
 }

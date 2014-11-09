@@ -27,7 +27,7 @@ public class SalaDeJogo {
         this.jogadores =  new ArrayList<Jogador>();
         this.casas = new ArrayList<Casa>();
         for (int i=0; i<20; i++)
-            casas.add(new Casa(i, null, 0));   
+            casas.add(new Casa(i, "", 0));   
         this.primeiro = null;
     }
     

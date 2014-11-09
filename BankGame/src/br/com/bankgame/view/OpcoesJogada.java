@@ -11,7 +11,6 @@ import br.com.bankgame.model.JSONParse;
 import br.com.bankgame.model.Venda;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JDialog;
 
 /**
  *
@@ -32,6 +31,7 @@ public class OpcoesJogada extends javax.swing.JDialog {
     private String json;
     private int valorTotalVendas;
     
+    private static boolean bonusRodada;    
     private static int dado;
     /**
      * Creates new form OpcoesJogada
@@ -39,7 +39,7 @@ public class OpcoesJogada extends javax.swing.JDialog {
      * @param parent
      * @param modal
      */
-    public OpcoesJogada(Casa casa, List<Venda> casasParaVenda, int meuId, int meuSaldo, int idCasa, String idConta, int dado, java.awt.Frame parent, boolean modal) {        
+    public OpcoesJogada(Casa casa, List<Venda> casasParaVenda, int meuId, int meuSaldo, boolean bonusRodada, int idCasa, String idConta, int dado, java.awt.Frame parent, boolean modal) {        
         super(parent, modal);
         initComponents();
         this.casa = casa;
@@ -52,58 +52,81 @@ public class OpcoesJogada extends javax.swing.JDialog {
         this.casasVendidas = new ArrayList<Venda>();
         this.jogadorFaliu = false;
         this.valorTotalVendas = 0;
+        this.bonusRodada = bonusRodada;
         verificarOpcoes();
     }
     
     private void verificarOpcoes(){
         if(casasParaVenda.isEmpty())
             VenderButton.setEnabled(false);
-        if(casa.getValor()<100){//verificar a casa inicio
+        if(bonusRodada){
+            statusRodadaLabel.setText("Voce ganhou 150 gold!");
+            pagamentoValor = -150;
+        }
+        if(casa.getValor()<100){//verificar a casas especiais
             comprarButton.setEnabled(false);
             adicionarPredioButton.setEnabled(false);
             if(casa.getValor()==-50){
                 statusRodadaLabel.setText("Voce ganhou 50 gold!");
-                pagamentoValor = casa.getValor();
-            }else if(casa.getValor()==-150){
-                statusRodadaLabel.setText("Voce ganhou 150 gold!");
-                pagamentoValor = casa.getValor();
+                pagamentoValor += casa.getValor();
+            }else if(casa.getValor()==-150){ //casa inicio
+                //ignora, pois ja foi creditado. (segundo if)
             }else{
                 int valor;
                 if (casa.getQtdPredios()==0)
-                    valor = Integer.parseInt(""+casa.getValor()*0.1);
+                    valor = casa.getValor();
                 else
-                    valor = Integer.parseInt(""+((casa.getValor()*0.1)*(casa.getQtdPredios() + 1)));
+                    valor = casa.getValor();
                                  
-                pagamentoValor = valor;
+                pagamentoValor += valor;
                 if((meuSaldo - pagamentoValor) <=0)
                     jogadorFaliu = true;
-                statusRodadaLabel.setText("Voce pagou "+casa.getValor()+" gold!/n Saldo: "+(meuSaldo-pagamentoValor));
+                statusRodadaLabel.setText("Voce pagou "+valor+" gold!\n Saldo: "+(meuSaldo-pagamentoValor));
             }
         }else{
             if (casa.getDono()==0){
                 statusRodadaLabel.setText("Imovel sem dono. Preco: "+casa.getValor());
                 adicionarPredioButton.setEnabled(false);
-                pagamentoValor = 0;
+                pagamentoValor += 0;
             }else{
                 comprarButton.setEnabled(false);
-                if(casa.getDono()==meuId){
-                    statusRodadaLabel.setText("Voce tem posse deste terreno.");
-                    pagamentoValor = 0;
-                }else{
+                if(casa.getMultiplicador()>1){//companias
                     adicionarPredioButton.setEnabled(false);
-                    int valor;
-                    if (casa.getQtdPredios()==0)
-                        valor = Integer.parseInt(""+casa.getValor()*0.1);
-                    else
-                        valor = Integer.parseInt(""+((casa.getValor()*0.1)*(casa.getQtdPredios() + 1)));
-                     
-                    pagamentoValor = valor;
-                    if((meuSaldo - pagamentoValor) <=0)
-                        jogadorFaliu = true;
-                    statusRodadaLabel.setText("Voce pagou "+casa.getValor()+" gold!/n Saldo: "+(meuSaldo-pagamentoValor));
+                    if (casa.getDono()==meuId){
+                        statusRodadaLabel.setText("Voce tem posse desta compania.");
+                        pagamentoValor += 0;
+                    }else{
+                        pagamentoValor += dado*casa.getMultiplicador();
+                        if((meuSaldo - pagamentoValor) <=0)
+                            jogadorFaliu = true;
+                        statusRodadaLabel.setText("Voce pagou "+pagamentoValor+" gold!\n Saldo: "+(meuSaldo-pagamentoValor));
+                    }
+                }else{//restante
+                    if(casa.getDono()==meuId){
+                        statusRodadaLabel.setText("Você tem posse deste imóvel.\nAdicionar Prédio: "+casa.getValor()/2+" gold");
+                        pagamentoValor += 0;
+                    }else{
+                        adicionarPredioButton.setEnabled(false);
+                        int valor;
+                        if (casa.getQtdPredios()==0)
+                            valor = (int) (casa.getValor()*0.1);
+                        else
+                            valor = (int) (casa.getValor()*0.1)*(casa.getQtdPredios() + 1);
+
+                        pagamentoValor += valor;
+                        if((meuSaldo - pagamentoValor) <=0)
+                            jogadorFaliu = true;
+                        statusRodadaLabel.setText("Voce pagou "+valor+" gold!\n Saldo: "+(meuSaldo-pagamentoValor));   
+                    }
                 }
             }
         }
+        if (meuSaldo<casa.getValor())
+            comprarButton.setEnabled(false);
+        if(casa.getDono() == meuId)
+            if(meuSaldo<casa.getValor()/2 || casa.getQtdPredios()==4)
+                adicionarPredioButton.setEnabled(false);
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -182,7 +205,7 @@ public class OpcoesJogada extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(statusRodadaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(statusRodadaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(desejaLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -193,7 +216,7 @@ public class OpcoesJogada extends javax.swing.JDialog {
                 .addComponent(adicionarPredioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(finalizarButton)
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -205,6 +228,7 @@ public class OpcoesJogada extends javax.swing.JDialog {
         compraIdCasa = idCasa;
         compraValor = casa.getValor();
         comprarButton.setEnabled(false);
+        
     }//GEN-LAST:event_comprarButtonActionPerformed
 
     private void VenderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VenderButtonActionPerformed
@@ -233,8 +257,9 @@ public class OpcoesJogada extends javax.swing.JDialog {
         statusRodadaLabel.setText("Predio adquirido.");
         casa.setDono(meuId);
         compraIdCasa = idCasa;
-        compraValor = casa.getValor();
+        compraValor = casa.getValor()/2;
         comprarButton.setEnabled(false);
+        adicionarPredioButton.setEnabled(false);
     }//GEN-LAST:event_adicionarPredioButtonActionPerformed
 
     private void finalizarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_finalizarButtonActionPerformed
@@ -279,7 +304,7 @@ public class OpcoesJogada extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                OpcoesJogada dialog = new OpcoesJogada(casa, casasParaVenda, meuId, meuSaldo, idCasa, pagamentoIdConta, dado, new javax.swing.JFrame(), true);
+                OpcoesJogada dialog = new OpcoesJogada(casa, casasParaVenda, meuId, meuSaldo, bonusRodada, idCasa, pagamentoIdConta, dado, new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

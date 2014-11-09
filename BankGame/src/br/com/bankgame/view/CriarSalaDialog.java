@@ -52,6 +52,24 @@ public class CriarSalaDialog extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText("Senha:");
 
+        nomeTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                nomeTextFieldKeyReleased(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                nomeTextFieldKeyPressed(evt);
+            }
+        });
+
+        senhaPasswordField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                senhaPasswordFieldKeyReleased(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                senhaPasswordFieldKeyPressed(evt);
+            }
+        });
+
         criarButton.setLabel("Criar");
         criarButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -137,6 +155,38 @@ public class CriarSalaDialog extends javax.swing.JDialog {
         resposta = true;
         dispose();
     }//GEN-LAST:event_criarButtonActionPerformed
+
+    private void nomeTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nomeTextFieldKeyPressed
+        int key = evt.getKeyCode();
+        if (key == java.awt.event.KeyEvent.VK_ENTER){
+            if (nomeTextField.getText().isEmpty()){
+                //ignorar
+            }else 
+                criarButtonActionPerformed(null);            
+        }
+    }//GEN-LAST:event_nomeTextFieldKeyPressed
+
+    private void nomeTextFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nomeTextFieldKeyReleased
+        int key = evt.getKeyCode();
+        if (key == java.awt.event.KeyEvent.VK_ENTER)
+        { }
+    }//GEN-LAST:event_nomeTextFieldKeyReleased
+
+    private void senhaPasswordFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_senhaPasswordFieldKeyReleased
+        int key = evt.getKeyCode();
+        if (key == java.awt.event.KeyEvent.VK_ENTER)
+        { }
+    }//GEN-LAST:event_senhaPasswordFieldKeyReleased
+
+    private void senhaPasswordFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_senhaPasswordFieldKeyPressed
+        int key = evt.getKeyCode();
+        if (key == java.awt.event.KeyEvent.VK_ENTER){
+            if (nomeTextField.getText().isEmpty()){
+                //ignorar
+            }else 
+                criarButtonActionPerformed(null);            
+        }
+    }//GEN-LAST:event_senhaPasswordFieldKeyPressed
 
     /**
      * @param args the command line arguments

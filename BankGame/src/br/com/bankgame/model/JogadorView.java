@@ -17,6 +17,7 @@ public class JogadorView {
     private int y;
     private int casa;
     private int saldo;
+    private boolean bonusRodada;
 
     public JogadorView(int x, int y, int id, String nome) {
         this.id = id;
@@ -25,6 +26,7 @@ public class JogadorView {
         this.nome = nome;
         this.casa = 0;
         this.saldo = 500;
+        this.bonusRodada = false;
     }
 
     public String getNome() {
@@ -69,6 +71,14 @@ public class JogadorView {
 
     public void setSaldo(int saldo) {
         this.saldo = saldo;
+    }
+
+    public boolean isBonusRodada() {
+        return bonusRodada;
+    }
+
+    public void setBonusRodada(boolean bonusRodada) {
+        this.bonusRodada = bonusRodada;
     }
     
     
